@@ -1,0 +1,180 @@
+﻿@{
+        ViewData["Title"] = "Create";
+    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
+    <div class="container">
+        <h4 class="text-center">Outfit Create Page</h4>
+        <br />
+        <table class="table table-bordered">
+            <tr>
+                <th>Outfit Name</th>
+                <td><input type="text" class="form-control" id="name"></td>
+            </tr>
+        </table>
+        <button type="button" onclick="createOutfit()" class="btn btn-link text-danger">Add Clothes</button>
+        <table class="table table-bordered" id="table1" style="visibility:hidden">
+            <tr>
+                <th>Head</th>
+                <td>
+                    @for (int i = 0; i < @ViewBag.hCount; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" name="head" type="checkbox" value="@ViewBag.head[i].Name" id="'box' + @i">
+                            <label class="form-check-label" for="'box' + @i">
+                                @ViewBag.head[i].Name
+                            </label>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th>Body</th>
+                <td>
+                    @for (int i = 0; i < @ViewBag.bCount; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" name="body"  type="checkbox" value="@ViewBag.body[i].Name" id="'box' + @i">
+                            <label class="form-check-label" for="'box' + @i">
+                                @ViewBag.body[i].Name
+                            </label>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th>Arm</th>
+                <td>
+                    @for (int i = 0; i < @ViewBag.aCount; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" name="arm"  type="checkbox" value="@ViewBag.arm[i].Name" id="'box' + @i">
+                            <label class="form-check-label" for="'box' + @i">
+                                @ViewBag.arm[i].Name
+                            </label>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th>Legs</th>
+                <td>
+                    @for (int i = 0; i < @ViewBag.lCount; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" name="legs"  type="checkbox" value="@ViewBag.legs[i].Name" id="'box' + @i">
+                            <label class="form-check-label" for="'box' + @i">
+                                @ViewBag.legs[i].Name
+                            </label>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th>Feet</th>
+                <td>
+                    @for (int i = 0; i < @ViewBag.fCount; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" name="feet"  type="checkbox" value="@ViewBag.feet[i].Name" id="'box' + @i">
+                            <label class="form-check-label" for="'box' + @i">
+                                @ViewBag.feet[i].Name
+                            </label>
+                        </div>
+                    }
+                </td>
+            </tr>
+        </table>
+        <button type="submit" onclick="createOutfitCloth()" class="btn text-primary" id="button2" style="visibility:hidden">Create</button>
+    </div>
+
+    <script>
+        var myOutfitID ;
+        function createOutfit() {
+            var tablePart = document.getElementById('table1');
+            if (tablePart.style.visibility == "hidden") {
+                tablePart.style.visibility = "visible";
+                document.getElementById('button2').style.visibility = "visible";
+            }
+
+            var name = document.getElementById('name').value;
+            $.ajax({
+                url: "/Outfit/CreateOutfit/?name=" + name
+
+            }).done(function (data) {
+                myOutfitID = data;
+            });
+        }
+
+        function createOutfitCloth() {
+            var headValues = []
+            var headCheckBox = document.getElementsByName('head');
+            for (var checkbox of headCheckBox) {
+                if (checkbox.checked) {
+                    headValues.push(checkbox.value);
+                }
+            }
+
+            var bodyValues = []
+            var bodyCheckBox = document.getElementsByName('body');
+            for (var checkbox of bodyCheckBox) {
+                if (checkbox.checked) {
+                    bodyValues.push(checkbox.value);
+                }
+            }
+
+            var armValues = []
+            var armCheckBox = document.getElementsByName('arm');
+            for (var checkbox of armCheckBox) {
+                if (checkbox.checked) {
+                    armValues.push(checkbox.value);
+                }
+            }
+
+            var legsValues = []
+            var legsCheckBox = document.getElementsByName('legs');
+            for (var checkbox of legsCheckBox) {
+                if (checkbox.checked) {
+                    legsValues.push(checkbox.value);
+                }
+            }
+
+            var feetValues = []
+            var feetCheckBox = document.getElementsByName('feet');
+            for (var checkbox of feetCheckBox) {
+                if (checkbox.checked) {
+                    feetValues.push(checkbox.value);
+                }
+            }
+
+            var allValues = [];
+            allValues.push(headValues);
+            allValues.push("-");
+            allValues.push(bodyValues);
+            allValues.push("-");
+            allValues.push(armValues);
+            allValues.push("-");
+            allValues.push(legsValues);
+            allValues.push("-");
+            allValues.push(feetValues);
+            allValues.push("-");
+            allValues.push(myOutfitID);
+
+            $.ajax({
+                method: "POST",
+                url: "/Outfit/CreateOutfitCloth/?values="  + allValues,
+
+            }).done(function (data) {
+                window.location.href = '/Outfit/Index/';
+            });
+
+        }
+
+
+    </script>
+
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+

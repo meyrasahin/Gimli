@@ -1,0 +1,93 @@
+﻿@using Gimli.Data.Entities.Enums;
+
+@model Gimli.Data.Entities.MyClothClasses.Cloth;
+
+@{
+    ViewData["Title"] = "Clothes";
+}
+
+<div class="container">
+    <h4 class="text-center">Cloth Create Page</h4>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>Name</th>
+            <td><input type="text" class="form-control" id="name"></td>
+        </tr>
+        <tr>
+            <th>Image</th>
+            <td><input type="text" class="form-control" id="image"></td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>
+                <select class="form-select" onchange="getClothTypes(this.options[this.selectedIndex].text)" aria-label="Default select example" id="bodyPart">
+                    <option selected disabled>Body Part</option>
+                    <option value="1">Head</option>
+                    <option value="2">Body</option>
+                    <option value="3">Arm</option>
+                    <option value="4">Legs</option>
+                    <option value="5">Feet</option>
+                </select>
+                <hr />
+                <select class="form-select" aria-label="Default select example" id="clothPart">
+                    <option selected disabled>Cloth Type</option>
+                </select>
+            </td>
+        </tr>
+
+
+    </table>
+
+    <button class="btn text-white" style="background-color:#1e309a;" type="submit" onclick="createCloth()" href="/Cloth/Index/" role="button">Create</button>
+</div>
+
+
+<script>
+    function getClothTypes(info) {
+        var part = document.getElementById('clothPart');
+        part.innerHTML = "";
+        part.innerHTML = '<option selected disabled>Cloth Type</option>';
+
+        $.ajax({
+            url: "/Cloth/GetClothTypes/?type=" + info
+
+        }).done(function (data) {
+
+            for (let j = 0; j < data.length; j++) {
+                part.innerHTML += '<option value="' + j + '">' + data[j] + '</option>';
+            }
+        });
+    }
+
+    function createCloth() {
+        var myName = document.getElementById('name').value;
+        var myImage = document.getElementById('image').value;
+        var myBodyPart = document.getElementById('bodyPart')[document.getElementById('bodyPart').selectedIndex].text;
+        var myClothType = document.getElementById('clothPart')[document.getElementById('clothPart').selectedIndex].text;
+
+        console.log(myName);
+        console.log(myImage);
+        console.log(myBodyPart);
+        console.log(myClothType);
+
+        $.ajax({
+            method:"POST",
+            url: "/Cloth/Create/",
+            data: {
+                name: myName,
+                image: myImage,
+                bodyPart: myBodyPart,
+                clothType: myClothType
+            }
+
+        }).done(function (data) {
+            window.location.href = '/Cloth/' + data + '/';
+            
+        });
+
+    }
+    
+
+</script>
+<script src="~/lib/jquery/dist/jquery.js"></script>

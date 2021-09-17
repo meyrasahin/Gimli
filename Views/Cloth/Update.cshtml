@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Update";
+}
+
+<h4 class="text-center">Cloth Update Page</h4>
+<br />
+
+<table class="table table-bordered">
+    <tr>
+        <th>ID</th>
+        <td>
+            <input class="form-control" type="text" id="id" value="@ViewBag.id" aria-label="Disabled input example" disabled readonly>
+        </td>
+    </tr>
+    <tr>
+        <th>part</th>
+        <td>
+            <input class="form-control" type="text" id="part" value="@ViewBag.part" aria-label="Disabled input example" disabled readonly>
+        </td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td><input type="text" class="form-control" id="name" placeholder="@ViewBag.cloth.Name"></td>
+    </tr>
+    <tr>
+        <th>Image</th>
+        <td><input type="text" class="form-control" id="image" placeholder="@ViewBag.cloth.Image"></td>
+    </tr>
+
+</table>
+
+<button class="btn text-white" style="background-color:#1e309a;" type="submit" onclick="updateCloth()" role="button">Update</button>
+
+<script>
+
+    function updateCloth() {
+        var myName = document.getElementById('name').value;
+        var myImage = document.getElementById('image').value;
+        var myId = document.getElementById('id').value;
+        var myPart = document.getElementById('part').value;
+
+        $.ajax({
+            method: "POST",
+            url: "/Cloth/Update/?name=" + myName + "|" + myImage + "|" + myId + "|" + myPart
+            
+        }).done(function (data) {
+            window.location.href = '/Cloth/' + data + '/';
+
+        });
+
+    }
+</script>
